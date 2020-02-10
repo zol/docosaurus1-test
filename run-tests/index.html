@@ -1,0 +1,143 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Run tests · Chromatic</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="Learn how to run Chromatic tests and setup CI"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Run tests · Chromatic"/><meta property="og:type" content="website"/><meta property="og:url" content="https://zol.github.io/docosaurus1-test/"/><meta property="og:description" content="Learn how to run Chromatic tests and setup CI"/><meta property="og:image" content="https://zol.github.io/docosaurus1-test/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://zol.github.io/docosaurus1-test/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/docosaurus1-test/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/docosaurus1-test/js/scrollSpy.js"></script><link rel="stylesheet" href="/docosaurus1-test/css/main.css"/><script src="/docosaurus1-test/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/docosaurus1-test/"><img class="logo" src="/docosaurus1-test/img/favicon.ico" alt="Chromatic"/><h2 class="headerTitleWithLogo">Chromatic</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="https://chromaticqa.com" target="_self">Pricing</a></li><li class="siteNavGroupActive"><a href="/docosaurus1-test/get-started" target="_self">Docs</a></li><li class=""><a href="https://chromaticqa.com" target="_self">Blog</a></li><li class=""><a href="https://chromaticqa.com" target="_self">Sign In</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Guides</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Guides</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docosaurus1-test/get-started">Get started</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/docosaurus1-test/run-tests">Run tests</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Run tests</h1></header><article><div><span><p>Tests can be run via the command line manually or in CI automatically.</p>
+<p><img src="img/workflow-component-test.png" alt="Test components"></p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="run-your-first-test-to-establish-baselines"></a><a href="#run-your-first-test-to-establish-baselines" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Run your first test to establish baselines</h2>
+<p>Before we begin, make sure you have an <code>&lt;app-code&gt;</code> by logging to <a href="https://www.chromaticqa.com/start">Chromatic</a> and creating a project.</p>
+<p>Your first test will setup visual testing for your Storybook. Run the following command in your project directory.</p>
+<pre><code class="hljs css language-bash">./node_modules/.bin/chromatic --app-code=&lt;your-app-code&gt;
+</code></pre>
+<div class="aside">
+Chromatic uses the `build-storybook` script from your `package.json` by default. You may need to update that script if you changed the `storybook` script (for example if you added a static directory with `-s`).
+<p>Otherwise you may need to add <a href="#available-options">options</a> to our test command.</p>
+</div>
+<p>After the first test completes, you'll have new test <a href="/branching-and-baselines">baselines</a> for each story on this branch. In other words, screenshots of the last know good state. Any future changes to your stories will be compared to the baselines.</p>
+<p><img src="img/setup-success.png" alt="Setup Success"></p>
+<h2><a class="anchor" aria-hidden="true" id="run-tests-to-check-for-ui-changes"></a><a href="#run-tests-to-check-for-ui-changes" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Run tests to check for UI changes</h2>
+<p>Visual testing relies on comparing images of the new rendered UI code to the baseline images. If a UI change is caught you get notified.</p>
+<p>Let's demo how that works. In your project, make a change to the UI and save it (you can always undo later).</p>
+<p>Then use the same test command you ran earlier. Add <a href="#available-options">options</a> as needed.</p>
+<pre><code class="hljs css language-bash">./node_modules/.bin/chromatic --app-code=&lt;your-app-code&gt;
+</code></pre>
+<p>Follow the link to the Chromatic app where you'll see the changes.</p>
+<p><img src="img/build-unreviewed.png" alt="Build changes"></p>
+<p>There are changes – perhaps even some you didn't expect! The component hierarchy enables small changes to snowball into major regressions. Visual testing with Chromatic helps you catch these changes in development –as they happen– instead of during QA or production (5-10x more costly).</p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="ensure-test-consistency-to-prevent-false-positives"></a><a href="#ensure-test-consistency-to-prevent-false-positives" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Ensure test consistency to prevent false positives</h2>
+<p>It's essential that your components and stories render in a <strong>consistent</strong> fashion between tests to prevent false positives. Some reasons your stories might not render consistently and ways you can avoid this include:</p>
+<ul>
+<li><p><strong>Randomness in stories</strong>: It's not uncommon to use random number generators to generate data for complex component inputs. To avoid this, you can hard-code the input data, but often a more convenient solution is to use a tool like <a href="https://github.com/davidbau/seedrandom">seedrandom</a> which you can use to make your &quot;random&quot; number generator consistent.</p></li>
+<li><p><strong>Use of the current date/time</strong>: Dates and times are a testers bane! To get consistency in components or tests that use the current time, you can use a tool to also &quot;seed&quot; the time, like <a href="https://github.com/schickling/timemachine">timemachine</a> for the <code>Date</code> object.</p></li>
+<li><p><strong>Animations and video</strong>: Chromatic will attempt to pause all animations and video. However, you may need to <a href="/animations">configure</a> Chromatic's exact behaviour.</p></li>
+<li><p><strong>Unpredictable resource hosts</strong>: Resources that load from unpredictable or flaky sources may not load in time (15s) to capture. Workaround this by serving resources as <a href="https://storybook.js.org/configurations/serving-static-files/">static files in Storybook</a> or using a <a href="https://placeholder.com/">placeholder service</a>. Learn more about how we <a href="/resource-loading">load resources</a>.</p></li>
+<li><p><strong>Skip stories</strong>: Some stories may render unpredictably intentionally. If this is the case you may want to <a href="ignoring-elements">ignore the story</a> from testing and move on.</p></li>
+</ul>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="create-an-npm-script-for-future-test-builds"></a><a href="#create-an-npm-script-for-future-test-builds" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Create an npm script for future test builds</h2>
+<p>The <code>chromatic</code> command will also give you the option of adding an npm script to your <code>package.json</code> so you can run future builds with <code>npm run chromatic</code>. If you want to add it manually, it should look something like:</p>
+<pre><code class="hljs css language-json">{
+  <span class="hljs-attr">"scripts"</span>: {
+    <span class="hljs-attr">"chromatic"</span>: <span class="hljs-string">"chromatic"</span>
+  }
+}
+</code></pre>
+<p>The above script command will pick up your app code by reading the <code>CHROMATIC_APP_CODE</code> environment variable. After adding the above, ensure you set <code>CHROMATIC_APP_CODE</code> when you run builds---such as in your CI config.</p>
+<p>If you allowed <code>chromatic</code> to add the above line, it will also have written the environment variable to your <code>package.json</code>. Depending on your level of trust of your code hosting provider, you should consider removing the environment variable and setting via your CI config.</p>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="next-review-workflow"></a><a href="#next-review-workflow" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Next: Review workflow</h2>
+<p>📸You know how to trigger tests! Now catch bugs and update baselines with the <a href="/builds">review workflow</a>.</p>
+<p><a class="btn primary round" href="/builds">Read next chapter</a></p>
+<hr>
+<h3><a class="anchor" aria-hidden="true" id="available-options"></a><a href="#available-options" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Available options</h3>
+<p>If you have customized the way your Storybook runs, you may need to pass additional options to the test command.</p>
+<table>
+<thead>
+<tr><th>Option</th><th>Use case</th></tr>
+</thead>
+<tbody>
+<tr><td><code>--app-code</code></td><td>The unique code for your app -- note you can just pass this via the <code>CHROMATIC_APP_CODE</code> environment variable.</td></tr>
+<tr><td><code>--build-script-name</code></td><td>The npm script that builds your Storybook we should take snapshots against (defaults to <code>build-storybook</code>). Use this if your Storybook build script is named differently.</td></tr>
+<tr><td><code>--storybook-build-dir</code></td><td>If you have already built your Storybook, provide the path to the built Storybook.</td></tr>
+<tr><td><code>--script-name</code></td><td>The npm script that starts your Storybook we should take snapshots against (defaults to <code>storybook</code>). Use this flag if you want to avoid building your storybook.</td></tr>
+<tr><td><code>--storybook-port</code></td><td>The port that Storybook serves on (autodetected by <code>--script-name</code>, override with this if that fails)</td></tr>
+<tr><td><code>--do-not-start</code></td><td>Use this if your Storybook is already running (for instance your Storybook is running in a different terminal already).</td></tr>
+<tr><td><code>--exec</code></td><td>Alternatively, start your Storybook with an arbitrary command. If you use this option, pass <code>--storybook-port</code> to configure the port Storybook runs on.</td></tr>
+<tr><td><code>--auto-accept-changes</code></td><td>If there are any changes to the build, automatically accept them. This is useful in some branching situations. See more in the <a href="/branching-and-baselines"><strong>branching docs</strong></a>.</td></tr>
+<tr><td><code>--exit-zero-on-changes</code></td><td>If all snapshots render but there are visual changes, exit with a 0 exit code, rather than the usual 1.</td></tr>
+<tr><td><code>--preserve-missing</code></td><td>Treat missing stories as unchanged rather than deleted.</td></tr>
+<tr><td><code>--no-interactive</code></td><td>Don't ask interactive questions about your setup.</td></tr>
+<tr><td><code>--debug</code></td><td>Output extra debugging information.</td></tr>
+<tr><td><code>CI=true</code></td><td>Tell Chromatic that you're running in CI. This will hide the &quot;Setup CI / Automation&quot; messages in the UI. Add <em>before</em> the test command like so: <code>CI=true yarn chromatic...</code></td></tr>
+</tbody>
+</table>
+<hr>
+<h3><a class="anchor" aria-hidden="true" id="troubleshooting"></a><a href="#troubleshooting" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Troubleshooting</h3>
+<h4><a class="anchor" aria-hidden="true" id="test-build-failures"></a><a href="#test-build-failures" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Test build failures</h4>
+<p>A build will <em>fail</em> if any of the snapshots fail to render (i.e. in rendering the latest version of the component, the snapshot throws a JavaScript exception). You'll need to fix the code for errored components before we can pass the build.</p>
+<h4><a class="anchor" aria-hidden="true" id="errored-builds"></a><a href="#errored-builds" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Errored builds</h4>
+<p>Chromatic builds and runs Storybook flawlessly <em>most of the time</em>, but we're not perfect (we wish). Sometimes builds don't run due to the rare infrastructure hiccup. If this happens, try to re-run the build. Rest assured, we keep track of errors and continue to work to improve the service every day.</p>
+<h4><a class="anchor" aria-hidden="true" id="timed-out"></a><a href="#timed-out" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Timed out</h4>
+<p>Chromatic takes snapshots very quickly. However, if we lose the connection to your server (for instance if you stop your server mid-build, or your internet connection goes down), builds can time out. Simply restart the build---perhaps with a more stable connection.</p>
+<h4><a class="anchor" aria-hidden="true" id="failed-to-evaluate-your-stories-when-running-tests"></a><a href="#failed-to-evaluate-your-stories-when-running-tests" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Failed to evaluate your stories when running tests</h4>
+<p>To make a list of Chromatic specs from your Storybook stories, we evaluate your story code from a node script, using JSDOM to simulate a browser environment. We don't render your stories but just gather a list of them by including your story files. You may need to avoid calling various browser-only constructs at the top-level or mock them out. Pass <code>--debug</code> to the script command to get extra info if it fails.</p>
+<h4><a class="anchor" aria-hidden="true" id="no-storybook-specs-found"></a><a href="#no-storybook-specs-found" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>No Storybook specs found</h4>
+<p>To get a list of specs from your stories, we evaluate your Storybook with <a href="https://github.com/tmpvar/jsdom">JSDOM</a>. This is a slightly different environment to a normal browser and can sometimes have problems. We will try to output errors if we see them; using the <code>--debug</code> flag to <code>chromatic</code> may help if we didn't catch any errors.</p>
+<h4><a class="anchor" aria-hidden="true" id="image-size-too-large"></a><a href="#image-size-too-large" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Image size too large</h4>
+<p>We have a 25 million pixel size limit for image snapshots. This ensures fast and reliable performance for every build.</p>
+<p>If your stories are larger than this, perhaps something has gone wrong? Let us know if you need this limit increased by chat or [email](<a href="mailto:support@hichroma.com">mailto:support@hichroma.com</a>?Subject=Image Size Limit).</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/docosaurus1-test/get-started"><span class="arrow-prev">← </span><span>Get started</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#run-your-first-test-to-establish-baselines">Run your first test to establish baselines</a></li><li><a href="#run-tests-to-check-for-ui-changes">Run tests to check for UI changes</a></li><li><a href="#ensure-test-consistency-to-prevent-false-positives">Ensure test consistency to prevent false positives</a></li><li><a href="#create-an-npm-script-for-future-test-builds">Create an npm script for future test builds</a></li><li><a href="#next-review-workflow">Next: Review workflow</a><ul class="toc-headings"><li><a href="#available-options">Available options</a></li><li><a href="#troubleshooting">Troubleshooting</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/docosaurus1-test/" class="nav-home"><img src="/docosaurus1-test/img/favicon.ico" alt="Chromatic" width="66" height="58"/></a><div><h5>Docs</h5><a href="/docosaurus1-test/en/doc1.html">Getting Started (or other categories)</a><a href="/docosaurus1-test/en/doc2.html">Guides (or other categories)</a><a href="/docosaurus1-test/en/doc3.html">API Reference (or other categories)</a></div><div><h5>Community</h5><a href="/docosaurus1-test/en/users.html">User Showcase</a><a href="https://stackoverflow.com/questions/tagged/" target="_blank" rel="noreferrer noopener">Stack Overflow</a><a href="https://discordapp.com/">Project Chat</a><a href="https://twitter.com/" target="_blank" rel="noreferrer noopener">Twitter</a></div><div><h5>More</h5><a href="/docosaurus1-test/blog">Blog</a><a href="https://github.com/">GitHub</a><a class="github-button" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><a href="https://opensource.facebook.com/" target="_blank" rel="noreferrer noopener" class="fbOpenSource"><img src="/docosaurus1-test/img/oss_logo.png" alt="Facebook Open Source" width="170" height="45"/></a><section class="copyright">Copyright © 2020 Your Name or Your Company Name</section></footer></div></body></html>
